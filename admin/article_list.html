@@ -73,5 +73,50 @@
         </div>
     </div>
 </body>
+<!--  -->
+<script type="text/html" id="category_list">
+    <option >所有分类</option>
+    {{ each data }}
+    <option >{{ $value.name }}</option>
+    {{ /each }}
+</script>
+<script src="./libs/http.js"></script>
+<script>
+    //入口函数
+    $(function () {
+        //获取文章分类列表
+        $.ajax({
+            url: BigNew.category_list,
+            type: 'get',
+            dataType: 'json',
+            success: function (backData) {
+                console.log(backData);
+                //模板引擎渲染页面 
+                $('#selCategory').html(template('category_list', backData));
+            }
+        });
+
+        //2.筛选功能模块
+        $('.btnSearch').click(function (e) {
+            //阻止表单默认跳转
+            e.preventDefault();
+            $.ajax({
+                url: BigNew.article_query,
+                type: 'get',
+                dataType: 'json',
+                data: {
+                    page: currentPage,
+                    perpage: 10,//每页返回10条数据
+                    type: $('#selCategory').val(),
+                    state: $('#selStatus').val(),
+                },
+                success: function (backData) {
+                    console.log();
+                    
+                }
+            });
+        })
+    })
+</script>
 
 </html>

@@ -7,9 +7,12 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>文章列表</title>
     <link rel="stylesheet" href="./libs/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./libs/jedate/css/jedate.css">
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/iconfont.css">
     <link rel="stylesheet" href="css/main.css">
+    <!-- jedata -->
+    <script src="./libs/jedate/js/jedate.js"></script>
     <!-- jq -->
     <script src="./libs/jquery-1.12.4.min.js"></script>
     <!-- 模板引擎 -->
@@ -51,6 +54,7 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">发布时间：</label>
                     <div class="col-sm-4">
+                        <input class="dateinput dateicon" id="test1" type="text" placeholder="YYYY年MM月DD日 hh:mm:ss"readonly>
                     </div>
                 </div>
                 <div class="form-group">
@@ -68,5 +72,60 @@
         </div>
     </div>
 </body>
+<script>
+    //入口函数
+    $(function () {
+        jeDate("#test1", {
+            isinitVal: true,
+            festival: true,
+            skinCell: "jedateblue",
+            format: 'YYYY年MM月DD日 hh:mm:ss',
+            //多语言设置
+            language: {
+                name: "cn",
+                month: ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"],
+                weeks: ["日", "一", "二", "三", "四", "五", "六"],
+                times: ["小时", "分钟", "秒数"],
+                titText: "请选择日期时间",
+                clear: "清空",
+                today: "今天",
+                yes: "确定",
+                close: "关闭"
+            },
+
+        });
+        // 文件预览
+        //1.给file表单元素注册onchange事件
+        $('#inputCover').change(function () {
+            //1.2 获取用户选择的图片
+            var file = this.files[0];
+            //1.3 将文件转为src路径
+            var url = URL.createObjectURL(file);
+            //1.4 将url路径赋值给img标签的src
+            $('.article_cover').attr('src', url);
+        });
+        //2.文件上传
+        $('.btn-release').on('click', function (e) {
+            //禁用表单默认提交事件
+            e.preventDefault();
+            //创建FormData对象：参数是表单dom对象
+            var fd = new FormData($('#form')[0])
+            $.ajax({
+                url: article_publish,
+                type: 'post',
+                dataType: 'json',
+                data: fd,
+                contentType: false,
+                processData: false,
+                success: function (backData) {
+                    console.log(backData);
+
+                }
+            });
+        });
+    })
+
+</script>
+
 
 </html>
