@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- 导入样式表 -->
+    <!-- <link rel="stylesheet" href="./css/demo.css"> -->
+    <link rel="stylesheet" href="./css/iconfont.css">
+    <link rel="stylesheet" href="./css/reset.css">
+    <link rel="stylesheet" href="./css/main.css">
+    <!-- 导入bootstrap css文件 -->
+    <link rel="stylesheet" href="./libs/bootstrap/css/bootstrap.min.css">
+    <!-- 导入jq文件 -->
+    <script src="./libs/jquery-1.12.4.min.js"></script>
+    <!-- 导入bootstrap js文件 -->
+    <script src="./libs/bootstrap/js/bootstrap.min.js"></script>
+    <title>登录管理后台</title>
+</head>
+
+<body>
+    <div class="wrap">
+        <header>
+            <div class="logo">
+                <a href="">
+                    <img src="./images/logo.png" alt="">
+                </a>
+            </div>
+            <div class="copyright">
+                <p> CopyRight © 2019 深圳百秀信息技术股份有限公司</p>
+                <br>
+                <p> All Rights Reserved </p>
+            </div>
+        </header>
+        <div class="login">
+            <div class="login_title">
+                后台管理系统
+            </div>
+            <div class="login_body">
+                <i class="iconfont icon-user"></i>
+                <i class="iconfont icon-key"></i>
+                <input type="text" class="user_name" placeholder="邮箱/手机号">
+                <input type="password" class="user_pass" placeholder="密码">
+                <button type="button" class="btn btn-primary loginBar" data-toggle="button" aria-pressed="false"
+                    autocomplete="off">登录</button>
+            </div>
+        </div>
+    </div>
+    <!-- 模态框 -->
+    <div class="modal fade" tabindex="-1" role="dialog" id="myModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">友情提示</h4>
+                </div>
+                <div class="modal-body">
+                    <p></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-dismiss="modal">确定</button>
+
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+</body>
+<script src="./libs/http.js"></script>
+<script src="./js/login.js"></script>
+
+</html>
