@@ -25,12 +25,17 @@
             <b>管理员</b>
         </div>
         <div class="menu">
-            <div class="level01 active"><a href="#" target="main_frame">
+            <div class="level01 active"><a href="./main_count.html" target="main_frame">
                     <iclass="iconfont icon-yidiandiantubiao04"></iclass="iconfont><span>首页</span>
-                </a></div>
-            <div class="level01"><a href="./article_edit.html" target="main_frame"><i
-                        class="iconfont icon-icon-article"></i><span>文章管理</span><b
-                        class="iconfont icon-arrowdownl"></b></a></div>
+                </a>
+            </div>
+            <div class="level01">
+                <a href="javascript:void(0)" >
+                    <i class="iconfont icon-icon-article"></i>
+                    <span>文章管理</span>
+                    <b class="iconfont icon-arrowdownl"></b>
+                </a>
+            </div>
             <ul class="level02">
                 <li><a href="./article_list.html" target="main_frame"><i class="iconfont icon-previewright"></i><span>文章列表</span></a>
                 </li>
@@ -39,6 +44,7 @@
                 <li><a href="./article_category.html" target="main_frame"><i class="iconfont icon-previewright"></i><span>文章类别管理</span></a>
                 </li>
             </ul>
+           
 
             <div class="level01"><a href="./comment_list.html" target="main_frame"><i class="iconfont icon-comment"></i><span>评论管理</span></a>
             </div>
@@ -103,17 +109,18 @@
         });
         //点击出现下拉菜单
         //一级列表
+        
         $('.level01').click(function () {
             ///1.1 排他思想修改样式
             $(this).addClass('active').siblings().removeClass('active');
-            if ($(this).next().hasClass('level02')) {
+            if ($(this).index() == 1) {
                 //滑入滑出切换
-                $(this).next().slideToggle();
+                $('.level02').slideToggle();
 
                 //旋转90度切换
                 $(this).find('b').toggleClass('rotate0');
                 //默认选中第一个
-                $('.level02>li>a').first()[0].click();
+                $('.level02>li:eq(0) a').click();
             } else {
                 $('.level02>li').removeClass('active')
             }
