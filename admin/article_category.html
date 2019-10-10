@@ -43,13 +43,104 @@
                 <tfoot>
                     <tr>
                         <td colspan="3" class="text-center">
-                            <a href="javascript:void(0)" class="btn btn-success" id="xinzengfenlei" data-toggle="modal"
-                                data-target="#myModal">新增分类</a>
+                            <a href="javascript:void(0)" class="btn btn-success add" id="xinzengfenlei"
+                                data-toggle="modal" data-target="#myModal">新增分类</a>
                         </td>
                     </tr>
                 </tfoot>
             </table>
         </div>
     </div>
+    <!-- 模态框 -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="exampleModalLabel">新增分类</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="recipient-name" class="control-label">分类名称</label>
+                            <input type="text" class="form-control designation" id="recipient-name">
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="control-label">分类别名</label>
+                            <!-- <textarea class="form-control" id="message-text" ></textarea> -->
+                            <input type="text" class="form-control slug" id="message-text">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary newAdd">新增</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 写模板 -->
+    <script id="classify" type="text/html">
+        {{each data v}}
+            <tr>
+            <td>{{v.name}}</td>
+                <td>{{v.slug}}</td>
+                <td class="text-center">
+                    <a href="javascript:void(0);" data-toggle="modal" class=" btn btn-info btn-xs">编辑</a>
+                    <a href="javascript:void(0);" class="btn btn-danger btn-xs">删除</a>
+                </td>
+            </tr>
+        {{/each}}
+    </script>
+    <script src="./libs/http.js"></script>
+    <script>
+        /*
+            1.点击新增分类按钮,弹出模态框
+            2.表单文本清空
+        */
+       //加载所有文章分类
+       $.ajax({
+           url:BigNew.category_list,
+           type:'get',
+           dataType:'json',
+           data:'',
+           success: function(backData){
+            console.log(backData);
+            $('.table>tbody').append(template('classify',backData))
+           }
+       });
+        //点击新增分类,弹出模态框
+        $('.text-center>a').click(function () {
+            $('.modal-body .form-control ').val('');
+            $('#exampleModal').modal();
+        });
+        // 点击新增按钮,新增分类功能
+        $('.newAdd').click(function () {
+            var name = $('.designation').val();
+            var slug = $('.slug').val();
+            $.ajax({
+                url: BigNew.category_add,
+                type: 'post',
+                dataType: 'json',
+                data: {
+                    name: name,
+                    slug: slug
+                },
+                success: function (backData) {
+                    console.log(backData);
+                    if (backData.code == 201) {
+                        $('#exampleModal').hide(function(){
+                            alert('新增成功');
+                            window.location.reload();
+                        });
+                        
+                    }
+
+                }
+            });
+        })
+
+    </script>
 
 </html>
