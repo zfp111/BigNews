@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="css/main.css">
   <script src="./libs/jquery-1.12.4.min.js"></script>
   <script src="./libs/template-web.js"></script>
+  <script src="./libs/jquery.twbsPagination.js"></script>
 </head>
 
 <body>
@@ -142,7 +143,7 @@
         </tbody>
       </table>
       <div class="row text-center">
-        <ul class="pagination pagination-sm">
+        <!-- <ul class="pagination pagination-sm">
           <li class="page-item first disabled"><a href="#" class="page-link">首页</a></li>
           <li class="page-item prev disabled"><a href="#" class="page-link">上一页</a></li>
           <li class="page-item active"><a href="#" class="page-link">1</a></li>
@@ -154,12 +155,81 @@
           <li class="page-item"><a href="#" class="page-link">7</a></li>
           <li class="page-item next"><a href="#" class="page-link">下一页</a></li>
           <li class="page-item last"><a href="#" class="page-link">尾页</a></li>
-        </ul>
+        </ul> -->
         <ul id="pagination" class="pagination-sm"></ul>
       </div>
 
     </div>
   </div>
 </body>
+<!-- 评论列表模板 -->
+<script id="comlis" type="text/html">
+    {{each data.data v}}
+      <tr>
+        <td>{{v.author}}</td>
+        <td>{{v.content}}</td>
+        <td>{{v.title}}</td>
+        <td>{{v.date}}</td>
+        <td>{{v.state}}</td>
+        <td class="text-center">
+          <a href="javascript:void(0);;" data-id="{{ v.id }}" class="btn btn-warning btn-xs">拒绝</a>
+          <a href="javascript:void(0);;" data-id="{{ v.id }}" class="btn btn-danger btn-xs">删除</a>
+        </td>
+      </tr>
+    {{/each}}
+</script>
+<script src="./libs/http.js"></script>
+<script>
+  //入口函数
+  $(function () {
+
+
+    comList(1,true);
+
+
+    //分页插件加载
+    function loadPag(totalPages, startPage) {
+      $('#pagination').twbsPagination('destroy');
+      $('#pagination').twbsPagination({
+        totalPages: totalPages,
+        startPage: startPage,//起始页数
+        visiblePages: 7,
+        first: '首页',
+        prev: '上一页',
+        next: '下一页',
+        last: '尾页',
+        onPageClick: function (event, page) {
+          // $('#page-content').text('Page ' + page);
+          comList(page)
+        }
+      });
+    }
+
+    //评论列表
+    function comList(currentPage,flag) {
+      $.ajax({
+        url: BigNew.comment_list,
+        type: 'get',
+        dataType: 'json',
+        data: {
+          page: currentPage,
+          perpage: 15
+        },
+        success: function (backData) {
+          console.log(backData);
+          $('.table>tbody').html(template('comlis', backData));
+          if(flag){
+            loadPag(backData.data.totalPage, currentPage);
+          }
+        
+        }
+      });
+    }
+  });
+
+
+
+
+</script>
 
 </html>
