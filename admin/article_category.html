@@ -32,10 +32,11 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>奇趣事</td>
-                        <td>funny</td>
+                        <td class="name">奇趣事</td>
+                        <td class="slug">funny</td>
                         <td class="text-center">
-                            <a href="javascript:void(0);" data-toggle="modal" data-target="#myModal" class=" btn btn-info btn-xs edit">编辑</a>
+                            <a href="javascript:void(0);" data-toggle="modal" data-target="#myModal"
+                                class=" btn btn-info btn-xs edit">编辑</a>
                             <a href="javascript:void(0);" class="btn btn-danger btn-xs">删除</a>
                         </td>
                     </tr>
@@ -43,7 +44,8 @@
                 <tfoot>
                     <tr>
                         <td colspan="3" class="text-center">
-                            <a href="javascript:void(0)" class="btn btn-success add" id="xinzengfenlei" data-toggle="modal" data-target="#myModal">新增分类</a>
+                            <a href="javascript:void(0)" class="btn btn-success add" id="xinzengfenlei"
+                                data-toggle="modal" data-target="#myModal">新增分类</a>
                         </td>
                     </tr>
                 </tfoot>
@@ -57,7 +59,7 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="exampleModalLabel">新增分类</h4>
+                    <h4 class="modal-title" id="exampleModalLabel">分类管理</h4>
                 </div>
                 <div class="modal-body">
                     <form id="form">
@@ -72,7 +74,7 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default cancel">取消</button>
+                    <button type="button" class="btn btn-default cancel" data-dismiss="modal">取消</button>
                     <button type="button" class="btn btn-primary confirm">确认</button>
                 </div>
             </div>
@@ -82,10 +84,10 @@
     <script id="classify" type="text/html">
         {{ each data v }}
         <tr>
-            <td>{{ v.name }}</td>
-            <td>{{ v.slug }}</td>
+            <td class='name'>{{ v.name }}</td>
+            <td class='slug'>{{ v.slug }}</td>
             <td class="text-center">
-                <a href="javascript:void(0);" data-toggle="modal" data-target="#myModal" class=" btn btn-info btn-xs" data-id="{{ v.id }}">编辑</a>
+                <a href="javascript:void(0);" data-toggle="modal" data-target="#myModal" class=" btn btn-info btn-xs edit" data-id="{{ v.id }}">编辑</a>
                 <a href="javascript:void(0)" class="btn btn-danger btn-xs delete" data-id="{{ v.id }}"">删除</a>
             </td>
         </tr>
@@ -104,25 +106,72 @@
                 url: BigNew.category_list,
                 type: 'get',
                 dataType: 'json',
-
                 success: function (backData) {
-                    console.log(backData);
                     $('.table>tbody').html(template('classify', backData))
                 }
             });
 
-            $('#myModal').on('hidden.bs.modal', function (e) {
-                
+            $('#myModal').on('shown.bs.modal', function (e) {
+                if (e.relatedTarget == $('.add')[0]) { //新增分类按钮
+                    $('.confirm').text('新增');
+                } else { //编辑按钮
+                    $('.confirm').text('编辑');
+                    //分类名
+                    $('#recipient-name').val($(e.relatedTarget).parent().prev().prev().text());
+                    //类别
+                    $('#message-text').val($(e.relatedTarget).parent().prev().text());
+                    //编辑id名
+                    $('.confirm').attr('data-id', $('.edit').attr('data-id'))
+
+                }
+            });
+
+            $('.confirm').click(function () {
+                if ($(this).text() == '新增') { //新增功能,执行新增后台接口
+                    $.ajax({
+                        url: BigNew.category_add,
+                        type: 'post',
+                        dataType: 'json',
+                        data: {
+                            name: $('.form-control').val(),
+                            slug: $('#message-text').val()
+                        },
+                        success: function (backData) {
+                            console.log(backData);
+                            if (backData.code == 201) {
+                                window.location.reload();
+                            }
+                        }
+                    });
+                } else {
+                    $.ajax({
+                        url: BigNew.category_edit,
+                        type: 'post',
+                        dataType: 'json',
+                        data: {
+                            id: $(this).attr('data-id'),
+                            name: $('.form-control').val(),
+                            slug: $('#message-text').val()
+                        },
+                        success: function (backData) {
+                            console.log(backData);
+                            if(backData.code == 200){
+                                alert('编辑成功')
+                                window.location.reload();
+                            }else {
+                                alert(backData.msg)
+                            }
+                        }
+                    });
+
+                }
             })
 
 
-
-
-
-
-
-
-
+            //取消按钮
+            $('.cancel').click(function () {
+                $('.modal-body>#form')[0].reset();
+            })
 
             $('.category_table>tbody').on('click', '.delete', function () {
                 $.ajax({
