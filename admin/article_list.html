@@ -149,12 +149,33 @@
                         onPageClick: function (event, page) {
                             $('#page-content').text('Page ' + page);
                             // console.log(page);
+                            artList(page)
                         }
                     });
                 }
             });
         });
-        $('#btnSearch').trigger('click')
+        $('#btnSearch').trigger('click');
+
+        function artList(currentPage) {
+            $.ajax({
+                url: BigNew.article_query,
+                type: 'get',
+                dataType: 'json',
+                data: {
+                    type: $('#selCategory').val(),
+                    state: $('#selStatus').val(),
+                    page: currentPage,
+                    perpage: 10
+                },
+                success: function (backData) {
+                    // console.log(backData);
+                    //模板引擎渲染页面 
+                    $('.table>tbody').html(template('atr_list', backData));
+                }
+            });
+        }
     })
 </script>
+
 </html>
