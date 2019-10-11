@@ -112,12 +112,15 @@
                 }
             });
 
-
         //2.获取文章分类列表
         $.ajax({
             url: BigNew.article_query,
             type: 'get',
             dataType: 'json',
+            data:{
+                page: 22,
+                perpage: 10
+            },
             success: function (backData) {
                 console.log(backData);
                 
