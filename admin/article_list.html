@@ -73,26 +73,56 @@
         </div>
     </div>
 </body>
-<!--  -->
-<script type="text/html" id="category_list">
+<!-- 文章类别 -->
+<script type="text/html" id="cat_list">
     <option >所有分类</option>
     {{ each data }}
     <option >{{ $value.name }}</option>
     {{ /each }}
 </script>
+
+<!-- 文章列表 -->
+<script id="atr_list" type="text/html">
+    {{each data.data v}}
+        <tr>
+            <td>{{ v.title}}</td>
+            <td>{{ v.author}}</td>
+            <td>{{ v.category}}</td>
+            <td class="text-center">{{ v.date}}</td>
+            <td class="text-center">{{ v.state}}</td>
+            <td class="text-center">
+                <a href="article_edit.html?id={{v.id}}" class="btn btn-default btn-xs">编辑</a>
+                <a href="javascript:void(0);" data-id= '{{v.id}}' class="btn btn-danger btn-xs delete">删除</a>
+            </td>
+        </tr>
+    {{/each}}
+</script>
 <script src="./libs/http.js"></script>
 <script>
     //入口函数
     $(function () {
-        //获取文章分类列表
+         //1.加载所有文章分类
+         $.ajax({
+                url: BigNew.category_list,
+                type: 'get',
+                dataType: 'json',
+                success: function (backData) {
+                    $('.form-inline>#selCategory').html(template('cat_list', backData));
+                   
+                }
+            });
+
+
+        //2.获取文章分类列表
         $.ajax({
-            url: BigNew.category_list,
+            url: BigNew.article_query,
             type: 'get',
             dataType: 'json',
             success: function (backData) {
                 console.log(backData);
+                
                 //模板引擎渲染页面 
-                $('#selCategory').html(template('category_list', backData));
+                $('.table>tbody').html(template('atr_list', backData));
             }
         });
 
