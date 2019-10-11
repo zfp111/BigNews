@@ -13,6 +13,8 @@
     <script src="./libs/jquery-1.12.4.min.js"></script>
     <!-- 引入模板引擎js文件 -->
     <script src="./libs/template-web.js"></script>
+    <!-- 分页插件js文件 -->
+    <script src="./libs/jquery.twbsPagination.js"></script>
 </head>
 
 <body>
@@ -69,15 +71,17 @@
                 </tbody>
             </table>
             <div class="row text-center">
+                <!-- 分页插件 -->
+                <ul id="pagination" class="pagination-sm"></ul>
             </div>
         </div>
     </div>
 </body>
 <!-- 文章类别 -->
 <script type="text/html" id="cat_list">
-    <option >所有分类</option>
-    {{ each data }}
-    <option >{{ $value.name }}</option>
+    <option value = "" >所有分类</option>
+    {{ each data v}}
+    <option value="{{v.id}}" >{{ v.name }}</option>
     {{ /each }}
 </script>
 
@@ -101,36 +105,19 @@
 <script>
     //入口函数
     $(function () {
-         //1.加载所有文章分类
-         $.ajax({
-                url: BigNew.category_list,
-                type: 'get',
-                dataType: 'json',
-                success: function (backData) {
-                    $('.form-inline>#selCategory').html(template('cat_list', backData));
-                   
-                }
-            });
-
-        //2.获取文章分类列表
+        //1.加载所有文章分类
         $.ajax({
-            url: BigNew.article_query,
+            url: BigNew.category_list,
             type: 'get',
             dataType: 'json',
-            data:{
-                page: 22,
-                perpage: 10
-            },
             success: function (backData) {
-                console.log(backData);
-                
-                //模板引擎渲染页面 
-                $('.table>tbody').html(template('atr_list', backData));
+                $('.form-inline>#selCategory').html(template('cat_list', backData));
             }
         });
 
+        //2.获取文章分类列表
         //2.筛选功能模块
-        $('.btnSearch').click(function (e) {
+        $('#btnSearch').click(function (e) {
             //阻止表单默认跳转
             e.preventDefault();
             $.ajax({
@@ -138,18 +125,36 @@
                 type: 'get',
                 dataType: 'json',
                 data: {
-                    page: currentPage,
-                    perpage: 10,//每页返回10条数据
                     type: $('#selCategory').val(),
                     state: $('#selStatus').val(),
+                    page: 1,
+                    perpage: 10
                 },
                 success: function (backData) {
-                    console.log();
-                    
+                    // console.log(backData);
+                    //模板引擎渲染页面 
+                    $('.table>tbody').html(template('atr_list', backData));
+
+                    //(1)先销毁已经存在的插件
+                    $('#pagination').twbsPagination('destroy');
+                    //(2)初始化新的插件
+                    $('#pagination').twbsPagination({
+                        totalPages: backData.data.totalPage,//总页数
+                        startPage: 1,//起始页数
+                        visiblePages: 6,//可见页数
+                        first: '首页',
+                        prev: '上一页',
+                        next: '下一页',
+                        last: '尾页',
+                        onPageClick: function (event, page) {
+                            $('#page-content').text('Page ' + page);
+                            // console.log(page);
+                        }
+                    });
                 }
             });
-        })
+        });
+        $('#btnSearch').trigger('click')
     })
 </script>
-
 </html>
