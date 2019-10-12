@@ -182,10 +182,7 @@
 <script>
   //入口函数
   $(function () {
-
-
     comList(1,true);
-
 
     //分页插件加载
     function loadPag(totalPages, startPage) {
@@ -216,7 +213,7 @@
           perpage: 15
         },
         success: function (backData) {
-          console.log(backData);
+      
           $('.table>tbody').html(template('comlis', backData));
           if(flag){
             loadPag(backData.data.totalPage, currentPage);
@@ -225,6 +222,22 @@
         }
       });
     }
+
+    //拒绝
+    $('.btn-warning').click(function(){
+      $.ajax({
+        url:BigNew.comment_reject,
+        type:'post',
+        dataType:'json',
+        data:{
+          id: $('.btn-warning').attr('data-id')
+        },
+        success: function(backData){
+            console.log(backData);
+            
+        }
+      });
+    })
   });
 
 
