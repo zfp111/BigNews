@@ -120,17 +120,17 @@
         $('#btnSearch').click(function (e) {
             //阻止表单默认跳转
             e.preventDefault();
-            artList(1,true);
+            artList(1, true);
         });
         $('#btnSearch').trigger('click');
 
-        //分页插件加载
-        function loadPagination(totalPage,startPage) {
+        //分页插件加载函数封装
+        function loadPagination(totalPage, startPage) {
             //(1)先销毁已经存在的插件
             $('#pagination').twbsPagination('destroy');
             //(2)初始化新的插件
             $('#pagination').twbsPagination({
-                totalPages:totalPage,//总页数
+                totalPages: totalPage,//总页数
                 startPage: startPage,//起始页数
                 visiblePages: 6,//可见页数
                 first: '首页',
@@ -145,8 +145,8 @@
             });
         }
 
-        //分页跳转功能
-        function artList(currentPage,flag) {
+        //分页跳转功能函数封装
+        function artList(currentPage, flag) {
             $.ajax({
                 url: BigNew.article_query,
                 type: 'get',
@@ -161,34 +161,33 @@
                     // console.log(backData);
                     //模板引擎渲染页面 
                     $('.table>tbody').html(template('atr_list', backData));
-                    if(flag){
-                        loadPagination(backData.data.totalPage,currentPage);
+                    if (flag) {
+                        loadPagination(backData.data.totalPage, currentPage);
                     }
                 }
             });
         };
 
-        //点击删除进入文章编辑模块
-        /*
-        1.给编辑按钮注册点击事件
-        2.获取点击的编辑按钮的文本
-        */
-      $('.delete').click(function(){
-          $('.table>tbody>tr').attr('id',$('.delete').attr('data-id'));
-          var id =  $('.table>tbody>tr').attr('id')
-          $.ajax({
-              url:BigNew.article_delete,
-              type:'post',
-              dataType:'json',
-              data:{
-                  id: id,
-              },
-              success: function(backData){
-                console.log(backData);
-                
-              }
-          });
-      })
+        //文章删除
+        //注意点:删除按钮是ajax动态添加的,所以,删除按钮需要动态注册点击事件
+        $('.table>tbody').on('click', '.delete', function () {
+            var id = $('.delete').attr('data-id');
+            $.ajax({
+                url: BigNew.article_delete,
+                type: 'post',
+                dataType: 'json',
+                data: { id: id },
+                success: function (backData) {
+                    console.log(backData);
+                    if (backData.code == 204) {
+                        alert(backData.msg);
+                        window.location.reload();
+                    }
+                }
+            });
+        })
+
+
     })
 </script>
 
