@@ -171,7 +171,7 @@
         //文章删除
         //注意点:删除按钮是ajax动态添加的,所以,删除按钮需要动态注册点击事件
         $('.table>tbody').on('click', '.delete', function () {
-            var id = $('.delete').attr('data-id');
+            var id = $(this).attr('data-id');
             $.ajax({
                 url: BigNew.article_delete,
                 type: 'post',

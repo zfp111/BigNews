@@ -143,19 +143,6 @@
         </tbody>
       </table>
       <div class="row text-center">
-        <!-- <ul class="pagination pagination-sm">
-          <li class="page-item first disabled"><a href="#" class="page-link">首页</a></li>
-          <li class="page-item prev disabled"><a href="#" class="page-link">上一页</a></li>
-          <li class="page-item active"><a href="#" class="page-link">1</a></li>
-          <li class="page-item"><a href="#" class="page-link">2</a></li>
-          <li class="page-item"><a href="#" class="page-link">3</a></li>
-          <li class="page-item"><a href="#" class="page-link">4</a></li>
-          <li class="page-item"><a href="#" class="page-link">5</a></li>
-          <li class="page-item"><a href="#" class="page-link">6</a></li>
-          <li class="page-item"><a href="#" class="page-link">7</a></li>
-          <li class="page-item next"><a href="#" class="page-link">下一页</a></li>
-          <li class="page-item last"><a href="#" class="page-link">尾页</a></li>
-        </ul> -->
         <ul id="pagination" class="pagination-sm"></ul>
       </div>
 
@@ -172,8 +159,12 @@
         <td>{{v.date}}</td>
         <td>{{v.state}}</td>
         <td class="text-center">
-          <a href="javascript:void(0);;" data-id="{{ v.id }}" class="btn btn-warning btn-xs">拒绝</a>
-          <a href="javascript:void(0);;" data-id="{{ v.id }}" class="btn btn-danger btn-xs">删除</a>
+          {{if v.state == '待审核' }}
+          <a href="javascript:void(0);;" data-id="{{ v.id }}" class="btn btn-success btn-xs btn_approve">批准</a>
+          {{else if v.state == '已通过'}}
+          <a href="javascript:void(0);;" data-id="{{ v.id }}" class="btn btn-warning btn-xs btn_refuse">拒绝</a>
+          {{/if}}
+          <a href="javascript:void(0);;" data-id="{{ v.id }}" class="btn btn-danger btn-xs btn-del">删除</a>
         </td>
       </tr>
     {{/each}}
@@ -182,7 +173,7 @@
 <script>
   //入口函数
   $(function () {
-    comList(1,true);
+    comList(1, true);
 
     //分页插件加载
     function loadPag(totalPages, startPage) {
@@ -203,7 +194,7 @@
     }
 
     //评论列表
-    function comList(currentPage,flag) {
+    function comList(currentPage, flag) {
       $.ajax({
         url: BigNew.comment_list,
         type: 'get',
@@ -213,30 +204,72 @@
           perpage: 15
         },
         success: function (backData) {
-      
+
           $('.table>tbody').html(template('comlis', backData));
-          if(flag){
+          if (flag) {
             loadPag(backData.data.totalPage, currentPage);
           }
-        
+
         }
       });
     }
 
-    //拒绝
-    $('.btn-warning').click(function(){
+    //拒绝功能
+    $('.mp20>tbody').on('click','.btn_refuse',function(){
+      var id = $(this).attr('data-id');
       $.ajax({
         url:BigNew.comment_reject,
         type:'post',
         dataType:'json',
         data:{
-          id: $('.btn-warning').attr('data-id')
+          id: id,
         },
         success: function(backData){
-            console.log(backData);
-            
+          console.log(backData);
+          if(backData.code == 200) {
+            window.location.reload();
+          }
         }
       });
+    })
+
+    //批准功能
+    $('.mp20>tbody').on('click','.btn_approve',function(){
+      var id = $(this).attr('data-id');
+      $.ajax({
+        url:BigNew.comment_pass,
+        type:'post',
+        dataType:'json',
+        data:{
+          id: id,
+        },
+        success: function(backData){
+          console.log(backData);
+          if(backData.code == 200){
+            window.location.reload();
+          }
+        }
+      });
+    })
+
+    //删除评论
+    $('.mp20>tbody').on('click','.btn-del', function () {
+      var id = $(this).attr('data-id')
+      $.ajax({
+        url: BigNew.comment_delete,
+        type: 'post',
+        dataType: 'json',
+        data: {
+          id: id,
+        },
+        success: function (backData) {
+          if(backData.code == 200){
+            alert('删除成功');
+            window.location.reload();
+          }
+
+        }
+      })
     })
   });
 
