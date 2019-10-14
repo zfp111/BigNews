@@ -240,7 +240,7 @@
                     <li>
                 {{/if}}
                 <!-- <li class="first" data-id='{{v.id}}'> -->
-                    <a href="#"><img src="{{v.cover}}" alt=""></a>
+                    <a href="./article.html?id={{v.id}}"><img src="{{v.cover}}" alt=""></a>
                     <p>{{v.title}}</p>
                 </li>
         {{/each}}
@@ -263,7 +263,7 @@
     <script id="newlist" type="text/html">
         {{each data v}}
             <div class="common_news_list">
-                <a href="#" class="list_pic"><img src="{{v.cover}}" alt=""></a>
+                <a href="./article.html?id={{v.id}}" class="list_pic"><img src="{{v.cover}}" alt=""></a>
                 <h4><a href="./article.html?id={{ v.id }}">{{v.title}} </a></h4>
                 <p>{{@ v.intro}}
                 </p>
@@ -297,7 +297,7 @@
     <!-- 焦点关注模板 -->
     <script id="focuslis" type="text/html">
         {{each data v}}
-        <li><a href="#">{{v.intro}}</a></li> 
+        <li><a href="./article.html?id={{v.id}}">{{v.intro}}</a></li> 
         {{/each}}
     </script>
     <script>

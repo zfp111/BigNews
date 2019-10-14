@@ -93,11 +93,12 @@
                     <input type="submit" name="" value="评 论" class="comment_sub"></div>
             </form>
 
-            <div class="comment_count">
-                4条评论
-            </div>
+
 
             <div class="comment_list_con">
+                <div class="comment_count">
+                    4条评论
+                </div>
                 <div class="comment_detail_list">
                     <div class="person_pic fl">乔</div>
                     <div class="name_time fl"><b>虚竹</b><span>4小时前</span></div>
@@ -129,9 +130,9 @@
             </div>
         </div>
         <div class="right_con setfl">
-            <div class="common_wrap">
+            <div class="common_wrap hot">
                 <h3><i class="fa fa-bar-chart"></i> 一周热门排行</h3>
-                <ul class="content_list">
+                <ul class="content_list List">
                     <li><span class="first">1</span><a href="#">神奇的水滴摄影，泡泡中的世界泡泡中的世界</a></li>
                     <li><span class="second">2</span><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
                     <li><span class="third">3</span><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
@@ -206,9 +207,130 @@
     </div>
 
     <!-- 引入模板引擎js文件 -->
+    <script src="./admin/libs/http.js"></script>
     <script src="./js/template-web.js"></script>
     <script src="./js/jquery-1.12.4.min.js"></script>
 
+    <!-- 文章分类列表模板 -->
+    <script id="cat_list" type="text/html">
+        <li class='up'></li>
+        {{each data v}}
+            <li><a href="./list.html?id={{v.id}}&name={{v.name}}">{{v.name}}</a></li>
+        {{/each}}
+    </script>
+    <script id="catlis" type="text/html">
+        {{each data v}}
+            <li><a href="./list.html?id={{v.id}}&name={{v.name}}">{{v.name}}</a></li>
+        {{/each}}
+    </script>
+
+    <!-- 热门排行模板 -->
+    <script id="hotrank" type="text/html">
+        {{each data v}}
+        <li><span class="first">{{$index+1}}</span><a href="./article.html?id={{ v.id }}">{{v.title}}</a></li>
+        {{/each}}
+    </script>
+
+    <!-- 最新评论模板 -->
+    <script id="comlist1" type="text/html">
+        {{each data v}}
+            <li>
+                <span>{{v.author.substr(0,1)}}</span>
+                <b><em>{{v.author}}</em> {{v.date}}说:</b>
+                <strong>{{v.intro}}</strong>
+            </li>
+        {{/each}}
+    </script>
+
+    <!-- 焦点关注模板 -->
+    <script id="focuslis2" type="text/html">
+        {{each data v}}
+        <li><a href="#">{{@ v.intro}}</a></li> 
+        {{/each}}
+    </script>
+
+
+    <!-- 文章详细内容模板 -->
+    <!-- <script id="author_list" type="text/html">
+        <script id="author_list" type="text/html">
+            {{data.author}} 发布于 {{data.date}}&nbsp;&nbsp;&nbsp;分类: {{data.category}}&nbsp;&nbsp;&nbsp;阅读:
+                    ({{data.read}})&nbsp;&nbsp;&nbsp;评论: ({{data.comments}})
+        </script>
+    </script> -->
+    <script>
+        $(function () {
+
+            var id = window.location.href.split('=')[1];
+
+            //文章类别列表
+            //ajax请求数据
+            //1.分类列表ajax数据请求
+            $.ajax({
+                url: BigNew.category_list,
+                type: 'get',
+                success: function (backData) {
+
+                    // ajax响应请求,模板引擎渲染页面
+                    $('.level_two').html(template('cat_list', backData));
+                    $('.left_menu').html(template('catlis', backData));
+                }
+            });
+
+            //2.热门排行
+            //ajax请求
+            $.ajax({
+                url: 'http://localhost:8080/api/v1/index/rank',
+                type: 'get',
+                dataType: 'json',
+                success: function (backData) {
+                    $('.hot>.List').html(template('hotrank', backData));
+                }
+            });
+
+            // 3.最新评论
+            $.ajax({
+                url: 'http://localhost:8080/api/v1/index/latest_comment',
+                type: 'get',
+                dataType: 'json',
+                success: function (backData) {
+                    //ajax返回数据,模板引擎渲染页面
+                    $('.comment_list').html(template('comlist1', backData))
+                }
+            });
+
+            //4.焦点关注
+            $.ajax({
+                url: 'http://localhost:8080/api/v1/index/attention',
+                type: 'get',
+                dataType: 'json',
+                success: function (backData) {
+                    //模板引擎渲染页面
+                    $('.guanzhu_list').html(template('focuslis2', backData))
+                }
+            });
+
+            //5.文章详细信息
+            $.ajax({
+                url: 'http://localhost:8080/api/v1/index/article',
+                type: 'get',
+                dataType: 'json',
+                data: {
+                    id: id,
+                },
+                success: function (backData) {
+                    console.log(backData);
+                    $('.article_title').text(backData.data.title);
+                    $('.article_info').text(backData.data.author + '发布于' +
+                        backData.data.date + '分类: ' + backData.data.category +
+                        '阅读:(' + backData.data.read + ')   评论: (' + backData.data.comments + ')');
+                    $('.article_con').html(backData.data.content)
+                }
+            });
+        });
+
+
+
+    </script>
 </body>
 
 </html>

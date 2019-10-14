@@ -156,7 +156,7 @@
         <td>{{v.author}}</td>
         <td>{{v.content}}</td>
         <td>{{v.title}}</td>
-        <td>{{v.date}}</td>
+        <td>{{v.date}}  {{v.time}}</td>
         <td>{{v.state}}</td>
         <td class="text-center">
           {{if v.state == '待审核' }}
@@ -201,7 +201,7 @@
         dataType: 'json',
         data: {
           page: currentPage,
-          perpage: 15
+          perpage: 20
         },
         success: function (backData) {
 
@@ -209,24 +209,23 @@
           if (flag) {
             loadPag(backData.data.totalPage, currentPage);
           }
-
         }
       });
     }
 
     //拒绝功能
-    $('.mp20>tbody').on('click','.btn_refuse',function(){
+    $('.mp20>tbody').on('click', '.btn_refuse', function () {
       var id = $(this).attr('data-id');
       $.ajax({
-        url:BigNew.comment_reject,
-        type:'post',
-        dataType:'json',
-        data:{
+        url: BigNew.comment_reject,
+        type: 'post',
+        dataType: 'json',
+        data: {
           id: id,
         },
-        success: function(backData){
+        success: function (backData) {
           console.log(backData);
-          if(backData.code == 200) {
+          if (backData.code == 200) {
             window.location.reload();
           }
         }
@@ -234,18 +233,18 @@
     })
 
     //批准功能
-    $('.mp20>tbody').on('click','.btn_approve',function(){
+    $('.mp20>tbody').on('click', '.btn_approve', function () {
       var id = $(this).attr('data-id');
       $.ajax({
-        url:BigNew.comment_pass,
-        type:'post',
-        dataType:'json',
-        data:{
+        url: BigNew.comment_pass,
+        type: 'post',
+        dataType: 'json',
+        data: {
           id: id,
         },
-        success: function(backData){
+        success: function (backData) {
           console.log(backData);
-          if(backData.code == 200){
+          if (backData.code == 200) {
             window.location.reload();
           }
         }
@@ -253,7 +252,7 @@
     })
 
     //删除评论
-    $('.mp20>tbody').on('click','.btn-del', function () {
+    $('.mp20>tbody').on('click', '.btn-del', function () {
       var id = $(this).attr('data-id')
       $.ajax({
         url: BigNew.comment_delete,
@@ -263,7 +262,7 @@
           id: id,
         },
         success: function (backData) {
-          if(backData.code == 200){
+          if (backData.code == 200) {
             alert('删除成功');
             window.location.reload();
           }
