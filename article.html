@@ -96,35 +96,38 @@
 
 
             <div class="comment_list_con">
-                <div class="comment_count">
-                    4条评论
-                </div>
-                <div class="comment_detail_list">
-                    <div class="person_pic fl">乔</div>
-                    <div class="name_time fl"><b>虚竹</b><span>4小时前</span></div>
-                    <div class="comment_text fl">
-                        遏制茅台酒价格过快上涨，多渠道供给，就不一定要买，租茅台酒也可以的，租售同权。开发共有产权茅台酒，让老百姓喝得起茅台酒，饮者有其酒。
+
+                <div class="cal">
+                    <div class="comment_detail_list">
+                        <div class="comment_count">
+                            4条评论
+                        </div>
+                        <div class="person_pic fl">乔</div>
+                        <div class="name_time fl"><b>虚竹</b><span>4小时前</span></div>
+                        <div class="comment_text fl">
+                            遏制茅台酒价格过快上涨，多渠道供给，就不一定要买，租茅台酒也可以的，租售同权。开发共有产权茅台酒，让老百姓喝得起茅台酒，饮者有其酒。
+                        </div>
                     </div>
-                </div>
-                <div class="comment_detail_list">
-                    <div class="person_pic fl">段</div>
-                    <div class="name_time fl"><b>虚竹</b><span>4小时前</span></div>
-                    <div class="comment_text fl">
-                        遏制茅台酒价格过快上涨，多渠道供给，就不一定要买，租茅台酒也可以的，租售同权。开发共有产权茅台酒，让老百姓喝得起茅台酒，饮者有其酒。
+                    <div class="comment_detail_list">
+                        <div class="person_pic fl">段</div>
+                        <div class="name_time fl"><b>虚竹</b><span>4小时前</span></div>
+                        <div class="comment_text fl">
+                            遏制茅台酒价格过快上涨，多渠道供给，就不一定要买，租茅台酒也可以的，租售同权。开发共有产权茅台酒，让老百姓喝得起茅台酒，饮者有其酒。
+                        </div>
                     </div>
-                </div>
-                <div class="comment_detail_list">
-                    <div class="person_pic fl">虚</div>
-                    <div class="name_time fl"><b>虚竹</b><span>4小时前</span></div>
-                    <div class="comment_text fl">
-                        遏制茅台酒价格过快上涨，多渠道供给，就不一定要买，租茅台酒也可以的，租售同权。开发共有产权茅台酒，让老百姓喝得起茅台酒，饮者有其酒。
+                    <div class="comment_detail_list">
+                        <div class="person_pic fl">虚</div>
+                        <div class="name_time fl"><b>虚竹</b><span>4小时前</span></div>
+                        <div class="comment_text fl">
+                            遏制茅台酒价格过快上涨，多渠道供给，就不一定要买，租茅台酒也可以的，租售同权。开发共有产权茅台酒，让老百姓喝得起茅台酒，饮者有其酒。
+                        </div>
                     </div>
-                </div>
-                <div class="comment_detail_list">
-                    <div class="person_pic fl">王</div>
-                    <div class="name_time fl"><b>虚竹</b><span>4小时前</span></div>
-                    <div class="comment_text fl">
-                        遏制茅台酒价格过快上涨，多渠道供给，就不一定要买，租茅台酒也可以的，租售同权。开发共有产权茅台酒，让老百姓喝得起茅台酒，饮者有其酒。
+                    <div class="comment_detail_list">
+                        <div class="person_pic fl">王</div>
+                        <div class="name_time fl"><b>虚竹</b><span>4小时前</span></div>
+                        <div class="comment_text fl">
+                            遏制茅台酒价格过快上涨，多渠道供给，就不一定要买，租茅台酒也可以的，租售同权。开发共有产权茅台酒，让老百姓喝得起茅台酒，饮者有其酒。
+                        </div>
                     </div>
                 </div>
             </div>
@@ -250,13 +253,23 @@
     </script>
 
 
-    <!-- 文章详细内容模板 -->
-    <!-- <script id="author_list" type="text/html">
-        <script id="author_list" type="text/html">
-            {{data.author}} 发布于 {{data.date}}&nbsp;&nbsp;&nbsp;分类: {{data.category}}&nbsp;&nbsp;&nbsp;阅读:
-                    ({{data.read}})&nbsp;&nbsp;&nbsp;评论: ({{data.comments}})
-        </script>
-    </script> -->
+    <!-- 最新评论模板 -->
+    <script id="com_li" type="text/html">
+        <div class="comment_count">
+            {{data.length}}条评论
+        </div>
+        {{each data v}}
+        <div class="comment_detail_list">
+            <div class="person_pic fl">{{v.author.substr(0,1)}}</div>
+            <div class="name_time fl"><b>{{v.author}}</b><span>{{v.date}}</span></div>
+            <div class="comment_text fl">
+                {{@ v.content}}
+            </div>
+        </div>
+        {{/each}}
+
+    </script>
+
     <script>
         $(function () {
 
@@ -306,6 +319,7 @@
                 success: function (backData) {
                     //模板引擎渲染页面
                     $('.guanzhu_list').html(template('focuslis2', backData))
+                   
                 }
             });
 
@@ -318,7 +332,6 @@
                     id: id,
                 },
                 success: function (backData) {
-                    console.log(backData);
                     $('.article_title').text(backData.data.title);
                     $('.article_info').text(backData.data.author + '发布于' +
                         backData.data.date + '分类: ' + backData.data.category +
@@ -326,6 +339,53 @@
                     $('.article_con').html(backData.data.content)
                 }
             });
+
+            //6.评论展示
+            $.ajax({
+                url: 'http://localhost:8080/api/v1/index/get_comment',
+                type: 'get',
+                dataType: 'json',
+                data: {
+                    articleId: id,
+                },
+                success: function (backData) {
+                    $('.cal').html(template('com_li',backData))
+                }
+            });
+
+            //7.给评论按钮注册点击事件
+            /*
+            注意点:
+                1.表单元素记得阻止默认跳转
+                2.非空判断
+                3.ajax请求数据
+            */
+            $('.comment_sub').click(function(e){
+                //1.阻止默认跳转
+                e.preventDefault();
+                //2.非空判断
+                if($('.comment_name').val().trim().length == 0 || $('.comment_input').val().trim().length == 0){
+                    alert('用户名和评论不能为空!');
+                    return;
+                }
+                $.ajax({
+                    url:'http://localhost:8080/api/v1/index/post_comment',
+                    type:'post',
+                    dataType:'json',
+                    data:{
+                        articleId: id,
+                        author: $('.comment_name').val(),
+                        content: $('.comment_input').val(),
+                    },
+                    success: function(backData){
+                        console.log(backData);
+                        if(backData.code == 201){
+                            alert('发表成功');
+                            window.location.reload();
+                        }
+                    }
+                });
+            })
         });
 
 
