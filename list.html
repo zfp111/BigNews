@@ -14,6 +14,7 @@
     <link rel="stylesheet" type="text/css" href="css/jquery.pagination.css">
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <script src="./js/jquery.pagination.min.js"></script>
+    <script src="./js/jquery.twbsPagination.js"></script>
 
     <script type="text/javascript" src="js/jquery.pagination.min.js"></script>
 </head>
@@ -293,9 +294,7 @@
             $.ajax({
                 url: BigNew.category_list,
                 type: 'get',
-
                 success: function (backData) {
-
                     // ajax响应请求,模板引擎渲染页面
                     $('.level_two').html(template('cat_list', backData));
                     $('.left_menu').html(template('catlis', backData));
@@ -314,42 +313,47 @@
             });
 
             //3.最新资讯ajax数据请求
-
+            comList(1,true);
             $('.search_btn').click(function () {
-                //获取搜索内容
-                var text = $('.search_txt').val();
-                //ajax请求
+                comList(1,true);
+            })
+            function comList(currentPage, flag) {
                 $.ajax({
                     url: 'http://localhost:8080/api/v1/index/search',
                     type: 'get',
                     dataType: 'json',
                     data: {
-                        page: 1,
-                        perpage: 7,
-                        key: text
+                        page: currentPage,
+                        key: $('.search_txt').val(),
                     },
                     success: function (backData) {
                         console.log(backData);
                         $('.con_list1').html(template('news', backData));
+                        if (flag) {
+                            loadPag(backData.data.totalCount, currentPage)
+                        }
                     }
                 });
-            });
-            $('.search_btn').trigger('click');
+            }
 
-            // $('#pagination').twbsPagination('destroy');
-            // $('#pagination').twbsPagination({
-            //     totalPages: totalPages,
-            //     startPage: startPage,//起始页数
-            //     visiblePages: 7,
-            //     first: '首页',
-            //     prev: '上一页',
-            //     next: '下一页',
-            //     last: '尾页',
-            //     onPageClick: function (event, page) {
-            //         $('#page-content').text('Page ' + page);
 
-            //     }
-            // });
+
+            function loadPag(totalPages, startPage) {
+                $('#pagination').twbsPagination('destroy');
+                $('#pagination').twbsPagination({
+                    totalPages: totalPages,
+                    startPage: startPage,//起始页数
+                    visiblePages: 7,
+                    first: '首页',
+                    prev: '上一页',
+                    next: '下一页',
+                    last: '尾页',
+                    onPageClick: function (event, page) {
+                        $('#page-content').text('Page ' + page);
+                        comList(page);
+                    }
+                });
+            }
 
 
 
@@ -359,7 +363,7 @@
                 type: 'get',
                 dataType: 'json',
                 success: function (backData) {
-                    console.log(backData);
+
                     //ajax返回数据,模板引擎渲染页面
                     $('.comment_list').html(template('comlist1', backData))
                 }
@@ -371,7 +375,7 @@
                 type: 'get',
                 dataType: 'json',
                 success: function (backData) {
-                    console.log(backData);
+
                     //模板引擎渲染页面
                     $('.guanzhu_list').html(template('focuslis2', backData))
                 }
