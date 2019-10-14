@@ -59,6 +59,21 @@
         <div class="column_pannel" id="column_show"></div>
     </div>
 
+    <script>
+        $.ajax({
+            url:'http://localhost:8080/api/v1/admin/data/info',
+            type:'get',
+            dataType:'json',
+            data:'',
+            success: function(backData){
+                console.log(backData);
+                $('.spannel>em').text(backData.totalArticle);
+                $('.scolor01>em').text(backData.dayArticle);
+                $('.scolor02>em').text(backData.totalComment);
+                $('.scolor03>em').text(backData.dayComment);
+            }
+        });
+    </script>
 
     <!-- 折线图 -->
     <script>
@@ -215,12 +230,19 @@
     </script>
     <!-- 柱状图 -->
     <script>
-        
-        
-        // 图标初始化
-        function loadEcharts2() {
-            //3.配置
-            //3.1 创建图表 ： 基于准备好的dom，初始化echarts实例
+        // $.ajax({
+        //     url:'http://localhost:8080/api/v1/admin/data/visit',
+        //     type:'get',
+        //     dataType:'json',
+          
+        //     success: function(backData){
+        //         console.log(backData);
+                
+        //     }
+        // });
+
+        // function echarts3() {
+            // 基于准备好的dom，初始化echarts实例
             var myChart2 = echarts.init(document.getElementById('column_show'));
 
             //3.2 配置图表样式和数据：指定图表的配置项和数据
@@ -289,9 +311,9 @@
             };
 
 
-            //3.3 显示图表 : 使用刚指定的配置项和数据显示图表。
+            // 使用刚指定的配置项和数据显示图表。
             myChart2.setOption(option2);
-        }
+        // }
 
     </script>
 </body>
