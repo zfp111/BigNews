@@ -145,7 +145,7 @@
             <div class="row text-center">
                 <ul id="pagination" class="pagination-sm"></ul>
             </div>
-            <!-- <div id="pagination" class="page"></div> -->
+           
         </div>
 
 
@@ -325,12 +325,13 @@
                     data: {
                         page: currentPage,
                         key: $('.search_txt').val(),
+                        perpage: 7
                     },
                     success: function (backData) {
                         console.log(backData);
                         $('.con_list1').html(template('news', backData));
                         if (flag) {
-                            loadPag(backData.data.totalCount, currentPage)
+                            loadPag(Math.ceil(backData.data.totalCount/7), currentPage)
                         }
                     }
                 });
@@ -343,7 +344,7 @@
                 $('#pagination').twbsPagination({
                     totalPages: totalPages,
                     startPage: startPage,//起始页数
-                    visiblePages: 7,
+                    visiblePages: 6,
                     first: '首页',
                     prev: '上一页',
                     next: '下一页',
