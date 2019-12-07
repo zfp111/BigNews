@@ -303,6 +303,7 @@
     <script>
         //入口函数
         $(function () {
+
             //首页焦点图ajax
             //1.ajax发送请求
             $.ajax({
@@ -328,12 +329,13 @@
             });
 
             //3.最新资讯ajax数据请求
+           
             $.ajax({
                 url: 'http://localhost:8080/api/v1/index/latest',
                 type: 'get',
                 dataType: 'json',
                 success: function (backData) {
-                  
+                    console.log(backData);
                     //ajax返回数据,模板引擎渲染数据
                     $('.common_news').html(template('newlist', backData));
                 }
@@ -346,35 +348,40 @@
                 type: 'get',
                 dataType: 'json',
                 success: function (backData) {
-                   
+
                     $('.hotrank_list').html(template('hotrank', backData));
                 }
             });
 
             // 5.最新评论
             $.ajax({
-                url:'http://localhost:8080/api/v1/index/latest_comment',
-                type:'get',
-                dataType:'json',
-                success: function(backData){
-                    
+                url: 'http://localhost:8080/api/v1/index/latest_comment',
+                type: 'get',
+                dataType: 'json',
+                success: function (backData) {
+
                     //ajax返回数据,模板引擎渲染页面
-                    $('.comment_list').html(template('comlist',backData))
+                    $('.comment_list').html(template('comlist', backData))
                 }
             });
 
             //6.焦点关注
             $.ajax({
-                url:'http://localhost:8080/api/v1/index/attention',
-                type:'get',
-                dataType:'json',
-                success: function(backData){
+                url: 'http://localhost:8080/api/v1/index/attention',
+                type: 'get',
+                dataType: 'json',
+                success: function (backData) {
                     console.log(backData);
                     //模板引擎渲染页面
-                    $('.guanzhu_list').html(template('focuslis',backData))
+                    $('.guanzhu_list').html(template('focuslis', backData))
                 }
             });
-        })
+
+          
+
+
+        });
+
     </script>
 </body>
 

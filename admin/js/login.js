@@ -45,7 +45,6 @@
                         localStorage.setItem('token',backData.token)
                         window.location.href = './index.html'
                     })
-
                 } else {
                     $('#myModal').modal();
                     $('.modal-body>p').text(backData.msg);
